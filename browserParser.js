@@ -1,4 +1,5 @@
 const css = require('css');
+const layout = require('./layout.js');
 let currentToken = null;
 let currenAttrute = null;
 //默认以document为根元素，也方便后面取出构造好的dom树
@@ -11,7 +12,7 @@ const EOF = Symbol('EOF');
 let rules = [];
 function addCSSRules(text) {
 	let ast = css.parse(text);
-	console.log(JSON.stringify(ast, null, '   '));
+	//console.log(JSON.stringify(ast, null, '   '));
 	rules.push(...ast.stylesheet.rules);
 }
 
@@ -63,7 +64,7 @@ function computeCSS(element) {
 				computedStyle[dec.property].value = dec.value;
 			}
 
-			console.log(element.computedStyle);
+			//console.log(element.computedStyle);
 		}
 	}
 }
@@ -162,7 +163,8 @@ function emit(token) {
 			if (top.tagName === 'style') {
 				addCSSRules(top.children[0].content);
 			}
-
+			//在top取得子元素后进行layout
+			layout(top);
 			//匹配栈顶则弹出栈顶
 			stack.pop();
 		}
@@ -392,6 +394,6 @@ module.exports.parseHTML = function parseHTML(html) {
 	}
 	state = state(EOF);
 	//取出dom树
-	console.log(stack[0]);
-	console.log(rules);
+	//console.log(stack[0]);
+	return stack[0];
 };
