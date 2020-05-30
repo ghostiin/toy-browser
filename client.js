@@ -1,4 +1,5 @@
 const net = require('net');
+const browserParser = require('./browserParser');
 
 class Request {
 	//method url=host+port+path
@@ -94,6 +95,7 @@ class ResponseBodyParser {
 	}
 	get response() {
 		this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+		console.log();
 		return {
 			statusCode: RegExp.$1,
 			statusText: RegExp.$2,
@@ -107,6 +109,7 @@ class ResponseBodyParser {
 		}
 	}
 	receiveChar(char) {
+		//console.log(this.current, JSON.stringify(char));
 		if (this.current === this.WAITING_STATUS_LINE) {
 			if (char === '\r') {
 				this.current = this.WAITING_STATUS_LINE_END;
@@ -162,7 +165,6 @@ class chunkBodyParser {
 		this.READING_CHUNK = 2;
 		this.READING_CHUNK_END = 3; //\r
 		this.WAITING_NEW_LINE = 4; //\n
-		this.LAST_CHUNK = 5;
 
 		this.length = 0;
 		this.content = [];
@@ -172,16 +174,17 @@ class chunkBodyParser {
 	receiveChar(char) {
 		//console.log(JSON.stringify(char), this.current);
 		if (this.current === this.WAITING_LENGTH) {
-			if (char === '0') {
-				this.current = this.LAST_CHUNK;
-				this.isFinished = true;
-			} else if (char === '\r') {
+			if (char === '\r') {
+				if (this.length === 0) {
+					this.isFinished = true;
+					//console.log('content', this.content);
+				}
 				this.current = this.WAITING_LENGTH_LINE_END;
 			} else {
 				//接收n位数的长度
 				//16进制
 				this.length *= 16;
-				this.length += char.charCodeAt(0) - '0'.charCodeAt(0);
+				this.length += parseInt(char, 16);
 			}
 		} else if (this.current === this.WAITING_LENGTH_LINE_END) {
 			if (char === '\n') {
@@ -192,6 +195,7 @@ class chunkBodyParser {
 			this.length--;
 			if (this.length === 0) {
 				this.current = this.READING_CHUNK_END;
+				//console.log('content', this.content);
 			}
 		} else if (this.current === this.READING_CHUNK_END) {
 			if (char === '\r') {
@@ -218,7 +222,8 @@ void (async function() {
 			name: '1ce'
 		}
 	});
-	//console.log(req.toString());
+
 	let response = await req.send();
-	console.log(response);
+	console.log('here', response);
+	let dom = browserParser.parseHTML(response.body);
 })();
