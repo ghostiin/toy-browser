@@ -8,10 +8,11 @@ const server = http.createServer((req, res) => {
 <head>
    <style>
    #flex-container {
-   background-color: #000;
+   background-color: rgb(0, 0, 255);
    width: 800px;
    height: 500px;
    display: flex;
+   justify-content: space-between;
    }
    #flex1 {
    width:300px;
@@ -19,7 +20,8 @@ const server = http.createServer((req, res) => {
    background-color: rgb(255, 0, 0);
    }
    #flex2 {
-   flex:1;
+   width:300px;
+   height:300px;
    background-color: rgb(0, 128, 0);
    }
    </style>
