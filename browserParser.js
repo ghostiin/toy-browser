@@ -1,5 +1,6 @@
 const css = require('css');
 const layout = require('./layout.js');
+const cssmatch = require('./match');
 let currentToken = null;
 let currenAttrute = null;
 //默认以document为根元素，也方便后面取出构造好的dom树
@@ -7,7 +8,6 @@ let stack = [ { type: 'document', children: [] } ];
 let currentTextNode = null;
 
 const EOF = Symbol('EOF');
-
 //负责处理CSS Rules的函数
 let rules = [];
 function addCSSRules(text) {
@@ -18,13 +18,13 @@ function addCSSRules(text) {
 
 function computeCSS(element) {
 	//将rules 应用到 element上
-	// console.log(rules);
-	// console.log('compute CSS for Element', element);
-	let elementsCopy = stack.slice().reverse(); //复制一份当前的stack 防止获取父元素时操作污染stack
+
+	let elementsCopy = [ ...stack ].reverse(); //复制一份当前的stack 防止获取父元素时操作污染stack
 	if (!element.computedStyle) {
 		element.computedStyle = {}; //初始化计算属性
 	}
 	for (let rule of rules) {
+		//cssmatch(rule.selectors[0], element);
 		let selectors = rule.selectors[0].split(' ').reverse(); //处理匹配的顺序是先内后外
 		let matched = false;
 		if (!match(element, selectors[0])) {
@@ -37,6 +37,9 @@ function computeCSS(element) {
 		for (let i = 0; i < elementsCopy.length; i++) {
 			if (match(elementsCopy[i], selectors[j])) {
 				j++; //如果匹配一个selector 那么则继续匹配下一个selector j指针向前走1
+				if (j >= selectors.length) {
+					break;
+				}
 			}
 		}
 		//如果slectors中的元素都能匹配上 即j === elementsCopy.length,则代表匹配成功
@@ -71,6 +74,7 @@ function computeCSS(element) {
 
 function match(element, selector) {
 	if (!selector || !element.attributes) return false;
+
 	if (selector.charAt(0) === '#') {
 		//匹配id选择器
 		let attr = element.attributes.filter((attr) => attr.name === 'id')[0];
@@ -78,10 +82,13 @@ function match(element, selector) {
 	} else if (selector.charAt(0) === '.') {
 		//匹配class选择器
 		let attr = element.attributes.filter((attr) => attr.name === 'class')[0];
-		if (attr && attr.value === selector.replace('.', '')) return true;
+		//如果一个节点挂了多个classname 前面只会处理成 class : “classname1 classname2”
+		if (attr && attr.value.split(' ').includes(selector.replace('.', ''))) return true;
 	} else if (element.tagName === selector) {
 		//匹配标签选择器
 		return true;
+	} else {
+		return false;
 	}
 }
 
@@ -179,7 +186,6 @@ function emit(token) {
 		}
 
 		currentTextNode.content += token.content;
-		//console.log(currentTextNode.content);
 	}
 }
 
@@ -394,6 +400,6 @@ module.exports.parseHTML = function parseHTML(html) {
 	}
 	state = state(EOF);
 	//取出dom树
-	//console.log(stack[0]);
+	console.log(stack[0]);
 	return stack[0];
 };

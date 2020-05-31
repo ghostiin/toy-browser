@@ -407,7 +407,7 @@ function layout(element) {
 		}
 		crossBase += crossSign * (lineCrossSize + gap);
 	});
-	console.log(items);
+	//console.log(items);
 }
 
 module.exports = layout;

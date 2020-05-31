@@ -11,6 +11,8 @@
 	"license": "ISC",
 	"dependencies": {
 		"css": "^2.2.4",
+		"css-select": "^2.1.0",
+		"css-what": "^3.2.1",
 		"images": "^3.0.2"
 	},
 	"devDependencies": {},
