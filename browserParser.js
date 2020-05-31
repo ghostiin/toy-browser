@@ -1,6 +1,5 @@
 const css = require('css');
 const layout = require('./layout.js');
-const cssmatch = require('./match');
 let currentToken = null;
 let currenAttrute = null;
 //默认以document为根元素，也方便后面取出构造好的dom树
