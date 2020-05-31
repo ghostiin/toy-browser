@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
 	   #flex1 {
 		width:300px;
 		height:300px;
-		background-color: rgb(128, 0, 0);
+		background-color: rgb(255, 0, 0);
 		}
 		.flex2 {
 		width:300px;
