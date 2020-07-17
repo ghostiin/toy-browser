@@ -226,7 +226,7 @@ void (async function() {
 	});
 
 	let response = await req.send();
-	//console.log('here', response);
+	console.log('here', response);
 	let dom = browserParser.parseHTML(response.body);
 	//console.log(dom);
 	let viewport = images(800, 500);

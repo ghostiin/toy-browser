@@ -1,9 +1,12 @@
 const http = require('http');
 
 const server = http.createServer((req, res) => {
-	res.setHeader('Content-Type', 'text/html');
 	res.setHeader('X-Foo', 'bar');
-	res.writeHead(200, { 'Content-Type': 'text/plain' });
+	// 在真实浏览器中，当Content-Type值为text/html时，浏览器将接收到的
+	// 响应实体作为html解析，
+	// 如果Content-Type为application/octet-stream字节流这种类型
+	// 浏览器会调用下载器模块下载文件
+	res.writeHead(200, { 'Content-Type': 'text/html' });
 
 	const str1 = `<html lang="en">
 <head>
