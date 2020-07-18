@@ -443,7 +443,7 @@ function layout(element) {
 			// 若flex item自身有align self属性
 			// 则忽略align item
 			let align = itemStyle.alignSelf || style.alignItems;
-			console.log(align);
+			// console.log(align);
 
 			if (itemStyle[crossSize] === null) {
 				itemStyle[crossSize] = align === 'stretch' ? lineCrossSize : 0;
@@ -460,7 +460,6 @@ function layout(element) {
 			if (align === 'center') {
 				itemStyle[crossStart] = crossBase + crossSign * (lineCrossSize - itemStyle[crossSize]) / 2;
 				itemStyle[crossEnd] = itemStyle[crossStart] + crossSign * itemStyle[crossSign];
-				console.log(itemStyle[crossStart], itemStyle[crossEnd]);
 			}
 
 			if (align === 'stretch') {

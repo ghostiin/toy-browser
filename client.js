@@ -102,8 +102,6 @@ ${this.bodyText}`;
 
 class ResponseBodyParser {
 	// 使用状态机的方法来编写解析Response的逻辑
-	// 使用状态机的原因： HTTP是流式传输
-	//
 	constructor() {
 		//等待接收响应首行
 		this.WAITING_STATUS_LINE = 0;

@@ -89,15 +89,10 @@ function computeCSS(element) {
 					//如果规则冲突则比较当前要加入的规则与原存规则的优先级
 					// 若现存规则优先级小于 当前要加入规则优先级
 					// 则将规则更新为当前加入规则，并把优先级更新为当前规则sp
-					for (let k = 0; k < 4; k++) {
-						computedStyle[dec.property][dec.value][k] = sp[k];
-					}
+					computedStyle[dec.property].value = dec.value;
+					computedStyle[dec.property].specificity = sp;
 				}
-				//将规则放入对应节点的computedStyle中
-				computedStyle[dec.property].value = dec.value;
 			}
-
-			//console.log(element.computedStyle);
 		}
 	}
 }
