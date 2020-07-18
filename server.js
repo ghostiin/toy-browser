@@ -16,7 +16,8 @@ const server = http.createServer((req, res) => {
            width: 800px;
            height: 500px;
            display: flex;
-           justify-content: space-between;
+		   justify-content: space-around;
+		   align-items: center;
 	   }
 	   #flex1 {
 		width:300px;
